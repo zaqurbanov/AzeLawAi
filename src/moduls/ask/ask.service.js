@@ -26,7 +26,6 @@ module.exports = class AskService{
             
         }
  
-        console.log(sessionId); 
         const lawData = await this.lawService.findAll()
         const result  =await this.aiService.geminiAi(lawData,question,chatHistory)
          await this.histroyService.create(sessionId,question,result)
