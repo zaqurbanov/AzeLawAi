@@ -24,24 +24,27 @@ module.exports = class AskService{
         if(chatHistory.length===0){
             chatHistory = null
             
-        }
- 
-        const lawData = await this.lawService.findAll()
-        const result  =await this.aiService.geminiAi(lawData,question,chatHistory)
-         await this.histroyService.create(sessionId,question,result)
-        // const createHistory = await this.histroyService.create(sessionId)
+        } 
+        const startTime  = Date.now()
+        const lawData = await this.lawService.findAll(question)
 
-
-        // const findLaw = lawData.filter(data=>data.lawContent.toLowerCase().includes(question.toLowerCase()))
-        // console.log(findLaw);
-        // const allData = lawData.map(data=>data.lawContent)
-
-        // const foundLaw = await this.faissService.findRelevantLaw(question)
+        const aiInputSize = JSON.stringify(lawData).length
+        console.log("Aiye gonderilen melumatin olcusu:",aiInputSize/1024,"/KB" );
+        const endTime  = ((Date.now()-startTime)/1000).toFixed(3)
         
-        const data = {
-            data:result,
+        console.log(" Butun datanin mongodan cekilmesi " + endTime + " /san");
+
+        // console.log(lawData);
+        const aiStartTime = Date.now()
+        const stream  =await this.aiService.geminiAi(lawData,question,chatHistory)
+        
+        const aiEndTime = ((Date.now()-aiStartTime)/1000).toFixed(3)
+        console.log("Gemini Ainin fikirlesib cavab vermek muddeti " + aiEndTime + " /san");
+        
+        const result = {
+            stream,
             sessionId
         }
-        return data 
-    }
+        return result 
+    }  
 }      
