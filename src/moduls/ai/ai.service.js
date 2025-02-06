@@ -25,20 +25,22 @@ module.exports = class AiService {
 **Mürəkkəb suallar üçün istifadəçidən əlavə məlumat soruş.**
 **Qanunlar arasında əlaqəni izah et.**
 
-        Aşağıdakı qanun mətnini istifadə edərək məsləhət verin: ${data}
+      Aşağıdakı hüquqi məlumatlardan istifadə edərək cavab verin. Əgər sualın cavabını tapa bilməsən, bunu istifadəçiyə bildir:
+${data} // **Yalnız ilk 2000 simvolu göndəririk**
+
 
         Qanunlarin maddelerini bildirin.
         **Hüquq məsləhətçisi kimi davran**
         **İstifadəçiyə qanun maddələrini izah et və real həyat nümunələri ver**
         **Əgər əlavə suallarınız varsa, izah edə bilərəm**
         **Açıq və başa düşülən dildə izah et**
-        **Keçmiş söhbətlər**: 
+        
         **İstifadəçi yeni sual verir**
         **Sual**: ${question}
         **Hüquqi Məsləhətçi Cavabı**:
 
 
-        Söhbət tarixi :
+        Söhbət arxivi :
         ${isChathistory}
         `;
 
@@ -50,9 +52,14 @@ module.exports = class AiService {
     sendRequestWithAi = async (inputText) => {
         const model = this.genAi.getGenerativeModel({ model: "gemini-1.5-flash" })
 
-        const result = await model.generateContent(inputText)
-        const response = await result.response
-        const text = await response.text()
-        return text
-    }
+
+        const stream = await model.generateContentStream(inputText)
+        
+        // for await(const chunk of result.stream) {
+        //         fullResponse +=chunk.text()
+        //         const chunkText = chunk.text()
+        //         process.stdout.write(chunkText)
+        // }
+        return stream.stream
+        }
 }

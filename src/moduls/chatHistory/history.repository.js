@@ -14,6 +14,7 @@ module.exports = class HistoryRepository{
     }
 
     findBySessionId = async(sessionId)=>{
+        
         const result  = await historyModel.find({session_id:sessionId})
         return result
     }

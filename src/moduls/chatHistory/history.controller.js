@@ -9,6 +9,7 @@ module.exports = class HistoryController{
 
     findBySessionId = async(req,res)=>{
         const {session_id} = req.params
+
         try {
             const result  = await this.histroyService.findBySessionId(session_id)
             return res.json({
@@ -16,7 +17,7 @@ module.exports = class HistoryController{
                 data:result
             })
         } catch (error) {
-                console.log(error);
+                console.log(error); 
         }
-    }
+    } 
 }
