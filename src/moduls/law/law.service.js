@@ -27,6 +27,7 @@ module.exports = class LawService{
                         lawContent:article.lawContent
                     }
                 })
+                
                 const result  = await this.lawRepository.createMany(formattedArticles)
             fs.unlinkSync(filePath) 
             
@@ -40,7 +41,7 @@ module.exports = class LawService{
         const articles = []
         for (const line of lines) {
 
-                if(line.startsWith("Maddə ")){
+                if(line.startsWith("Maddə ")|| line.startsWith("M a d d ə ")){
                     if(currentArticles){
                         articles.push(currentArticles)
                     }
